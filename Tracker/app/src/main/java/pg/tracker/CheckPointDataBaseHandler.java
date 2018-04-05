@@ -45,9 +45,8 @@ public class CheckPointDataBaseHandler {
         if(cursor.moveToFirst()){
             do{
                 String data="";
-                data += cursor.getInt(0);
-                data += cursor.getString(1);
-                data += cursor.getDouble(2);
+                data += cursor.getString(1) + " lat, ";
+                data += cursor.getDouble(2) + " lon";
                 data += cursor.getDouble(3);
                 allItem.add(data);
 

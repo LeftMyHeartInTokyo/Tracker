@@ -2,6 +2,7 @@ package pg.tracker;
 
 import android.*;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.location.Criteria;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private boolean addingCheckPoints;
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
 
     @Override
@@ -60,9 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         CheckPointDataBaseHandler checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
-        checkPointDataBaseHandler.writeData("test2", 30.0, 40.0);
-        ArrayList<String> data = checkPointDataBaseHandler.readData();
 
+        checkPointDataBaseHandler.writeData("test2", 30.0, 40.0);
     }
 
     @Override
@@ -92,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Dodawanie CheckPointu
     private void addMarkerOnLocation(LatLng loc){
         Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+        //wykomentowanie activity z listą
+        //showCheckPointsList();
     }
 
     //Pobiera aktualna lokacje telefonu
@@ -107,9 +111,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return myLocation;
     }
 
-    private void writeToDatabase() {
-
+    public void showCheckPointsList() {
+        Intent intent = new Intent(this, AllCheckPointsActivity.class);
+        String message = "msg";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
+
+
+
 
 
 
