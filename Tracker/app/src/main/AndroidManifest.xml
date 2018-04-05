@@ -36,6 +36,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".CheckPointEditActivity"></activity>
+        <activity android:name=".AllCheckPointsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+        </activity>
     </application>
 
 </manifest>

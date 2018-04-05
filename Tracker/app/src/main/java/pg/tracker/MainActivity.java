@@ -23,14 +23,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private boolean addingCheckPoints;
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        CheckPointDataBaseHandler checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
+
+        checkPointDataBaseHandler.writeData("test2", 30.0, 40.0);
     }
 
     @Override
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Dodawanie CheckPointu
     private void addMarkerOnLocation(LatLng loc){
         Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+        //wykomentowanie activity z listą
+        //showCheckPointsList();
     }
 
     //Pobiera aktualna lokacje telefonu
@@ -121,6 +124,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return myLocation;
     }
+
+    public void showCheckPointsList() {
+        Intent intent = new Intent(this, AllCheckPointsActivity.class);
+        String message = "msg";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
+
+
 
 
 
