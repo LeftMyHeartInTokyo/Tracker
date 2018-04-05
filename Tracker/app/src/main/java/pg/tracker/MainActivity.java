@@ -1,11 +1,17 @@
 package pg.tracker;
 
 import android.*;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private boolean addingCheckPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        addingCheckPoints = false;
+        Button clickButtonPunKon = (Button) findViewById(R.id.button1);
+        clickButtonPunKon.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                addingCheckPoints=!addingCheckPoints;
+                if(addingCheckPoints) findViewById(R.id.button1).getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
+                else findViewById(R.id.button1).getBackground().clearColorFilter();
+            }
+        });
+
     }
 
     @Override
@@ -44,16 +63,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // a request for location permission.
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            public void onMapClick(LatLng point) {
+                if(addingCheckPoints)
+                addMarkerOnLocation(point);
+            }
+        });
+
+    }
+
+    //Dodawanie CheckPointu
+    private void addMarkerOnLocation(LatLng loc){
+        Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+    }
+
+    //Pobiera aktualna lokacje telefonu
+    private Location getMyLocation() {
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (myLocation == null) {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+            String provider = lm.getBestProvider(criteria, true);
+            myLocation = lm.getLastKnownLocation(provider);
+        }
+        return myLocation;
     }
 
     private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
         @Override
         public void onMyLocationChange(Location location) {
             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
-            if(mMap != null){
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-            }
+//            !!! USUNALEM CENTROWANIE !!!
+//            dododawanie markera :: Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+//            if(mMap != null){
+//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+//            }
         }
     };
 
