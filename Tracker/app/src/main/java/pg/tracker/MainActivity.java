@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        Button buttonPointsList = (Button) findViewById(R.id.button5);
+        buttonPointsList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showCheckPointsList();
+            }
+        });
         checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
     }
 

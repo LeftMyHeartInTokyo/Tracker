@@ -27,28 +27,40 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="PUN KO" />
+            android:text="PUN KO"
+            android:textSize="10sp"/>
 
         <Button
             android:id="@+id/button2"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="BLISCY" />
+            android:text="BLISCY"
+            android:textSize="10sp"/>
 
         <Button
             android:id="@+id/button3"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="  JA  " />
+            android:text="  JA  "
+            android:textSize="10sp"/>
 
         <Button
             android:id="@+id/button4"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="ALARMY" />
+            android:text="ALARMY"
+            android:textSize="10sp"/>
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Punkty"
+            android:textSize="10sp"/>
 
     </LinearLayout>
 </LinearLayout>
