@@ -47,6 +47,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        Button button = (Button) findViewById(R.id.button3);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Location location = getMyLocation();
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+            }
+        });
+
     }
 
     @Override
@@ -62,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // location permission from the user. This sample does not include
         // a request for location permission.
         mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+       // mMap.setOnMyLocationChangeListener(onMyLocationChange);
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             public void onMapClick(LatLng point) {
@@ -91,16 +100,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return myLocation;
     }
 
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-//            !!! USUNALEM CENTROWANIE !!!
-//            dododawanie markera :: Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
-//            if(mMap != null){
-//                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-//            }
-        }
-    };
+
 
 }
