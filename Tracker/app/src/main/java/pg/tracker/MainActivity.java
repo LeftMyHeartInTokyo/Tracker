@@ -2,6 +2,7 @@ package pg.tracker;
 
 import android.*;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.location.Criteria;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +22,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -75,11 +81,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             public void onMapClick(LatLng point) {
-                if(addingCheckPoints)
-                addMarkerOnLocation(point);
+                if(addingCheckPoints){
+                    addMarkerOnLocation(point);
+                    //Go to Checkpoint Edit Activity
+                    startActivityForResult(new Intent(getApplicationContext(), CheckPointEditActivity.class),999);
+                }
             }
         });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==999 && resultCode==RESULT_OK){
+            String[] dataFromEdit = data.getStringArrayExtra("dataFromEdit");
+            //TODO DATA FROM EDIT HERE !!
+            //Add it to db
+            Toast.makeText(getApplicationContext(), "Edit Done", Toast.LENGTH_LONG).show();
+        }
+        if(requestCode==999 && resultCode==RESULT_CANCELED){
+            //message that edit was cancelled
+            Toast.makeText(getApplicationContext(), "Edit Cancelled", Toast.LENGTH_LONG).show();
+        }
     }
 
     //Dodawanie CheckPointu
