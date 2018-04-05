@@ -21,10 +21,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private boolean addingCheckPoints;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
             }
         });
+
+        CheckPointDataBaseHandler checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
+        checkPointDataBaseHandler.writeData("test2", 30.0, 40.0);
+        ArrayList<String> data = checkPointDataBaseHandler.readData();
 
     }
 
@@ -98,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             myLocation = lm.getLastKnownLocation(provider);
         }
         return myLocation;
+    }
+
+    private void writeToDatabase() {
+
     }
 
 
