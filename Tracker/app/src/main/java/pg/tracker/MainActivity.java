@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private boolean addingCheckPoints;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    private String[] dataFromEdit;
+    private LatLng sheredPoint;
+    CheckPointDataBaseHandler checkPointDataBaseHandler;
 
 
     @Override
@@ -60,9 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        CheckPointDataBaseHandler checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
-
-        checkPointDataBaseHandler.writeData("test2", 30.0, 40.0);
+        checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             public void onMapClick(LatLng point) {
                 if(addingCheckPoints){
-                    addMarkerOnLocation(point);
+                    sheredPoint = point;
                     //Go to Checkpoint Edit Activity
                     startActivityForResult(new Intent(getApplicationContext(), CheckPointEditActivity.class),999);
                 }
@@ -94,9 +95,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==999 && resultCode==RESULT_OK){
-            String[] dataFromEdit = data.getStringArrayExtra("dataFromEdit");
-            //TODO DATA FROM EDIT HERE !!
-            //Add it to db
+            dataFromEdit = data.getStringArrayExtra("dataFromEdit");
+            addMarkerOnLocation(sheredPoint);
+            checkPointDataBaseHandler.writeData(dataFromEdit[0], sheredPoint.latitude, sheredPoint.longitude);
             Toast.makeText(getApplicationContext(), "Edit Done", Toast.LENGTH_LONG).show();
         }
         if(requestCode==999 && resultCode==RESULT_CANCELED){

@@ -6,16 +6,6 @@
     android:weightSum="8">
 
     <EditText
-        android:id="@+id/editTextId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="Id" />
-
-    <EditText
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,26 +14,6 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:text="Name" />
-
-    <EditText
-        android:id="@+id/editTextLat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="Lat" />
-
-    <EditText
-        android:id="@+id/editTextLong"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="Long" />
 
     <EditText
         android:id="@+id/editTextAlarm"
@@ -60,6 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:text="OK" />
 </LinearLayout>

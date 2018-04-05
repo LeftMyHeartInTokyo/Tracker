@@ -16,10 +16,7 @@ public class CheckPointEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_point_edit);
 
-        editTextId = (EditText) findViewById(R.id.editTextId);
         editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextLat = (EditText) findViewById(R.id.editTextLat);
-        editTextLong = (EditText) findViewById(R.id.editTextLong);
         editTextAlarm = (EditText) findViewById(R.id.editTextAlarm);
         Button button = (Button) findViewById(R.id.button5);
         button.setOnClickListener(new View.OnClickListener() {
@@ -41,10 +38,7 @@ public class CheckPointEditActivity extends AppCompatActivity {
     protected void onOkPressed() {
         Intent i = new Intent();
         String[] editData = new String[]{
-                editTextId.getText().toString(),
                 editTextName.getText().toString(),
-                editTextLat.getText().toString(),
-                editTextLong.getText().toString(),
                 editTextAlarm.getText().toString(),
         };
         i.putExtra("dataFromEdit", editData);

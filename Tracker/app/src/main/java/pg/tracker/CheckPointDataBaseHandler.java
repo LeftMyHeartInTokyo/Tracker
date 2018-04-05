@@ -27,7 +27,7 @@ public class CheckPointDataBaseHandler {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_NAME, "test");
+        values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_NAME, name);
         values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_LAT, lat);
         values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_LON, lon);
         // Insert the new row, returning the primary key value of the new row
