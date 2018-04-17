@@ -54,14 +54,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        Button button = (Button) findViewById(R.id.button3);
+        /*Button button = (Button) findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Location location = getMyLocation();
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
             }
-        });
+        });*/
 
         Button buttonPointsList = (Button) findViewById(R.id.button5);
         buttonPointsList.setOnClickListener(new View.OnClickListener() {
