@@ -144,7 +144,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String message = "msg";
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
-        refreshCheckPointsOnMap();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(mMap != null) refreshCheckPointsOnMap();
     }
 
     private void refreshCheckPointsOnMap(){

@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class AllCheckPointsActivity extends AppCompatActivity {
 
     private CheckPointDataBaseHandler checkPointDataBaseHandler;
+    private String oldCheckPointName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +29,10 @@ public class AllCheckPointsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String items[] = ((String) parent.getItemAtPosition(position)).split(", ");
+                oldCheckPointName = items[0];
                 Intent i = new Intent(getApplicationContext(), CheckPointEditActivity.class);
                 i.putExtra("nameLatLon", items);
                 startActivityForResult(i,998);
-
-                //Intent intent = new Intent(Activity.this,destinationActivity.class);
-                //based on item add info to intent
-                //startActivity(intent);
             }
         });
     }
@@ -49,6 +47,7 @@ public class AllCheckPointsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
             if (dataFromEdit[0].equals("accept")){
+                checkPointDataBaseHandler.deleteData(oldCheckPointName, Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
                 checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
                 Toast.makeText(getApplicationContext(), "Check Point Edited", Toast.LENGTH_LONG).show();
             }
