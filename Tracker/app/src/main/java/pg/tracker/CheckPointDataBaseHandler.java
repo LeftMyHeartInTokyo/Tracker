@@ -36,9 +36,16 @@ public class CheckPointDataBaseHandler {
 
     public void deleteData(String name, Double lat, Double lon){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        //TODO MAKE IT WORKING
-        //db.delete(CheckPointEntry.FeedEntry.TABLE_NAME, CheckPointEntry.FeedEntry.COLUMN_NAME_NAME +"="+name,)
+        db.delete(CheckPointEntry.FeedEntry.TABLE_NAME,
+                CheckPointEntry.FeedEntry.COLUMN_NAME_NAME+"='"+name+"'"+" AND "+
+                CheckPointEntry.FeedEntry.COLUMN_NAME_LAT+"='"+lat+"'"+" AND "+
+                CheckPointEntry.FeedEntry.COLUMN_NAME_LON+"='"+lon+"'", null);
 
+    }
+
+    public void deleteAllData(){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.delete(CheckPointEntry.FeedEntry.TABLE_NAME,null, null);
     }
 
     public ArrayList<String> readData() {

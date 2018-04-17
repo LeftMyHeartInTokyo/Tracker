@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean addingCheckPoints;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private String[] dataFromEdit;
-    private LatLng sheredPoint;
     CheckPointDataBaseHandler checkPointDataBaseHandler;
 
 
@@ -92,29 +91,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             public void onMapClick(LatLng point) {
                 if(addingCheckPoints){
-                    sheredPoint = point;
                     //Go to Checkpoint Edit Activity
-                    startActivityForResult(new Intent(getApplicationContext(), CheckPointEditActivity.class),999);
+                    Intent i = new Intent(getApplicationContext(), CheckPointEditActivity.class);
+                    i.putExtra("nameLatLon", new String[]{"",String.valueOf(point.latitude),String.valueOf(point.longitude)});
+                    startActivityForResult(i,999);
                 }
             }
         });
 
-        //add points from database to map
-        ArrayList<String> allCheckPoints = checkPointDataBaseHandler.readData();
-        for(String checkPoint : allCheckPoints){
-            String data[] = checkPoint.split(", ");
-            LatLng checkPointPos;
-            try
-            {
-                checkPointPos = new LatLng(Double.parseDouble(data[1]), Double.parseDouble(data[2]));
-            }
-            catch(NumberFormatException e)
-            {
-                //wrong data
-                continue;
-            }
-            addMarkerOnLocation(checkPointPos);
-        }
+        refreshCheckPointsOnMap();
     }
 
     @Override
@@ -122,28 +107,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(requestCode==999 && resultCode==RESULT_OK){
             dataFromEdit = data.getStringArrayExtra("dataFromEdit");
             if (dataFromEdit[0].equals("delete")){
-                checkPointDataBaseHandler.deleteData(dataFromEdit[1], sheredPoint.latitude, sheredPoint.longitude);
+                //Dont know if it is needed here...
+                //checkPointDataBaseHandler.deleteData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
             if (dataFromEdit[0].equals("accept")){
-                checkPointDataBaseHandler.writeData(dataFromEdit[1], sheredPoint.latitude, sheredPoint.longitude);
-                Toast.makeText(getApplicationContext(), "Check Point Edited", Toast.LENGTH_LONG).show();
+                checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
+                Toast.makeText(getApplicationContext(), "Check Point Added", Toast.LENGTH_LONG).show();
             }
         }
         if(requestCode==999 && resultCode==RESULT_CANCELED){
             //message that edit was cancelled
-            Toast.makeText(getApplicationContext(), "Edit Cancelled", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Check Point Addition Cancelled", Toast.LENGTH_LONG).show();
         }
+        refreshCheckPointsOnMap();
     }
 
-    //Dodawanie CheckPointu
     private void addMarkerOnLocation(LatLng loc){
         Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
-        //wykomentowanie activity z listą
-        //showCheckPointsList();
     }
 
-    //Pobiera aktualna lokacje telefonu
     private Location getMyLocation() {
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -161,6 +144,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String message = "msg";
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
+        refreshCheckPointsOnMap();
+    }
+
+    private void refreshCheckPointsOnMap(){
+        mMap.clear();
+        ArrayList<String> allCheckPoints = checkPointDataBaseHandler.readData();
+        for(String checkPoint : allCheckPoints){
+            String data[] = checkPoint.split(", ");
+            LatLng checkPointPos;
+            try
+            {
+                checkPointPos = new LatLng(Double.parseDouble(data[1]), Double.parseDouble(data[2]));
+            }
+            catch(NumberFormatException e)
+            {
+                //wrong data
+                continue;
+            }
+            addMarkerOnLocation(checkPointPos);
+        }
     }
 
 

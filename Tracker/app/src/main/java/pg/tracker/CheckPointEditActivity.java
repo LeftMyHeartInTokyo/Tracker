@@ -9,14 +9,18 @@ import android.widget.EditText;
 
 public class CheckPointEditActivity extends AppCompatActivity {
 
-    private EditText editTextId, editTextName, editTextLat, editTextLong, editTextAlarm;
+    private EditText editTextName, editTextAlarm;
+    private String nameLatLonValues[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_point_edit);
 
+        nameLatLonValues = getIntent().getExtras().getStringArray("nameLatLon");
+
         editTextName = (EditText) findViewById(R.id.editTextName);
+        editTextName.setText(nameLatLonValues[0]);
         editTextAlarm = (EditText) findViewById(R.id.editTextAlarm);
         Button buttonAcc = (Button) findViewById(R.id.button5);
         buttonAcc.setOnClickListener(new View.OnClickListener() {
@@ -35,8 +39,6 @@ public class CheckPointEditActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent();
-        //String[] editData = new String[]{};
-        //i.putExtra("dataFromEdit", editData);
         setResult(RESULT_CANCELED,i);
         finish();
     }
@@ -46,6 +48,8 @@ public class CheckPointEditActivity extends AppCompatActivity {
         String[] editData = new String[]{
                 "delete",
                 editTextName.getText().toString(),
+                nameLatLonValues[1],
+                nameLatLonValues[2],
                 editTextAlarm.getText().toString()
         };
         i.putExtra("dataFromEdit", editData);
@@ -58,6 +62,8 @@ public class CheckPointEditActivity extends AppCompatActivity {
         String[] editData = new String[]{
                 "accept",
                 editTextName.getText().toString(),
+                nameLatLonValues[1],
+                nameLatLonValues[2],
                 editTextAlarm.getText().toString()
         };
         i.putExtra("dataFromEdit", editData);
