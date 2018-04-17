@@ -34,6 +34,13 @@ public class CheckPointDataBaseHandler {
         long newRowId = db.insert(CheckPointEntry.FeedEntry.TABLE_NAME, null, values);
     }
 
+    public void deleteData(String name, Double lat, Double lon){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        //TODO MAKE IT WORKING
+        //db.delete(CheckPointEntry.FeedEntry.TABLE_NAME, CheckPointEntry.FeedEntry.COLUMN_NAME_NAME +"="+name,)
+
+    }
+
     public ArrayList<String> readData() {
         ArrayList<String> allItem = new ArrayList<>();
 
@@ -45,8 +52,8 @@ public class CheckPointDataBaseHandler {
         if(cursor.moveToFirst()){
             do{
                 String data="";
-                data += cursor.getString(1) + " lat, ";
-                data += cursor.getDouble(2) + " lon";
+                data += cursor.getString(1) + ", ";//lat
+                data += cursor.getDouble(2) + ", ";//lon
                 data += cursor.getDouble(3);
                 allItem.add(data);
 

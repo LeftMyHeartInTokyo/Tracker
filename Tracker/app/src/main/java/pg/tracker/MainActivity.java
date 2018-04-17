@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -96,15 +98,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+
+        //add points from database to map
+        ArrayList<String> allCheckPoints = checkPointDataBaseHandler.readData();
+        for(String checkPoint : allCheckPoints){
+            String data[] = checkPoint.split(", ");
+            LatLng checkPointPos;
+            try
+            {
+                checkPointPos = new LatLng(Double.parseDouble(data[1]), Double.parseDouble(data[2]));
+            }
+            catch(NumberFormatException e)
+            {
+                //wrong data
+                continue;
+            }
+            addMarkerOnLocation(checkPointPos);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==999 && resultCode==RESULT_OK){
             dataFromEdit = data.getStringArrayExtra("dataFromEdit");
-            addMarkerOnLocation(sheredPoint);
-            checkPointDataBaseHandler.writeData(dataFromEdit[0], sheredPoint.latitude, sheredPoint.longitude);
-            Toast.makeText(getApplicationContext(), "Edit Done", Toast.LENGTH_LONG).show();
+            if (dataFromEdit[0].equals("delete")){
+                checkPointDataBaseHandler.deleteData(dataFromEdit[1], sheredPoint.latitude, sheredPoint.longitude);
+                Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
+            }
+            if (dataFromEdit[0].equals("accept")){
+                checkPointDataBaseHandler.writeData(dataFromEdit[1], sheredPoint.latitude, sheredPoint.longitude);
+                Toast.makeText(getApplicationContext(), "Check Point Edited", Toast.LENGTH_LONG).show();
+            }
         }
         if(requestCode==999 && resultCode==RESULT_CANCELED){
             //message that edit was cancelled

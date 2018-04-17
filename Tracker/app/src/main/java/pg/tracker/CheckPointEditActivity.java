@@ -18,10 +18,16 @@ public class CheckPointEditActivity extends AppCompatActivity {
 
         editTextName = (EditText) findViewById(R.id.editTextName);
         editTextAlarm = (EditText) findViewById(R.id.editTextAlarm);
-        Button button = (Button) findViewById(R.id.button5);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button buttonAcc = (Button) findViewById(R.id.button5);
+        buttonAcc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onOkPressed();
+            }
+        });
+        Button buttonDel = (Button) findViewById(R.id.button6);
+        buttonDel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                onDelPressed();
             }
         });
     }
@@ -35,11 +41,24 @@ public class CheckPointEditActivity extends AppCompatActivity {
         finish();
     }
 
+    public void onDelPressed() {
+        Intent i = new Intent();
+        String[] editData = new String[]{
+                "delete",
+                editTextName.getText().toString(),
+                editTextAlarm.getText().toString()
+        };
+        i.putExtra("dataFromEdit", editData);
+        setResult(RESULT_OK,i);
+        finish();
+    }
+
     protected void onOkPressed() {
         Intent i = new Intent();
         String[] editData = new String[]{
+                "accept",
                 editTextName.getText().toString(),
-                editTextAlarm.getText().toString(),
+                editTextAlarm.getText().toString()
         };
         i.putExtra("dataFromEdit", editData);
         setResult(RESULT_OK,i);
