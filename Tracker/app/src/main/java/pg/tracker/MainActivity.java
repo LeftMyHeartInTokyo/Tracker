@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -127,8 +128,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         refreshCheckPointsOnMap();
     }
 
-    private void addMarkerOnLocation(LatLng loc) {
-        Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
+    private void addMarkerOnLocation(LatLng loc, String color) {
+        if(color.equals("Czerwony")) {
+            Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        }
+        else if(color.equals("Niebieski")) {
+            Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        }
+        else if(color.equals("Zielony")) {
+            Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        }
+        else if(color.equals("Zółty")) {
+            Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+        }
     }
 
     private Location getMyLocation() {
@@ -179,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //wrong data
                 continue;
             }
-            addMarkerOnLocation(checkPointPos);
+            addMarkerOnLocation(checkPointPos, data[3]);
         }
     }
 
