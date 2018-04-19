@@ -43,7 +43,7 @@ public class CheckPointEditActivity extends AppCompatActivity {
             }
         });
         colorListView = (ListView) findViewById(R.id.colorListView);
-        final String colors[] = {"Czerwony", "Zielony", "Niebieski", "Czarny"};
+        final String colors[] = {"Czerwony", "Zielony", "Niebieski", "Zolty"};
         ArrayList<String> colorsList = new ArrayList<String>();
         colorsList.addAll(Arrays.asList(colors));
 

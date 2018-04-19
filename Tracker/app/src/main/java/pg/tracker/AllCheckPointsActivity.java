@@ -44,14 +44,14 @@ public class AllCheckPointsActivity extends AppCompatActivity {
             dataFromEdit = data.getStringArrayExtra("dataFromEdit");
             if (dataFromEdit[0].equals("delete")){
                 checkPointDataBaseHandler.deleteData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
-                        dataFromEdit[4]);
+                        dataFromEdit[5]);
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
             if (dataFromEdit[0].equals("accept")){
                 checkPointDataBaseHandler.deleteData(oldCheckPointName, Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
-                        dataFromEdit[4]);
+                        dataFromEdit[5]);
                 checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
-                        dataFromEdit[4]);
+                        dataFromEdit[5]);
                 Toast.makeText(getApplicationContext(), "Check Point Edited", Toast.LENGTH_LONG).show();
             }
         }

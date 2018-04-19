@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         }
-        else if(color.equals("Zółty")) {
+        else if(color.equals("Zolty")) {
             Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc).icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
         }
