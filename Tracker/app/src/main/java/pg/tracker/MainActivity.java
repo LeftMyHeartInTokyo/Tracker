@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,13 +26,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationChangeListener {
 
     private GoogleMap mMap;
     private boolean addingCheckPoints;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private String[] dataFromEdit;
     CheckPointDataBaseHandler checkPointDataBaseHandler;
+    private boolean isLocationTrackerEnabled = false;
 
 
     @Override
@@ -46,23 +48,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         addingCheckPoints = false;
         Button clickButtonPunKon = (Button) findViewById(R.id.button1);
-        clickButtonPunKon.setOnClickListener( new View.OnClickListener() {
+        clickButtonPunKon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                addingCheckPoints=!addingCheckPoints;
-                if(addingCheckPoints) findViewById(R.id.button1).getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
+            public void onClick(View view) {
+                addingCheckPoints = !addingCheckPoints;
+                if (addingCheckPoints)
+                    findViewById(R.id.button1).getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
                 else findViewById(R.id.button1).getBackground().clearColorFilter();
             }
         });
 
-        /*Button button = (Button) findViewById(R.id.button3);
+        Button button = (Button) findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Location location = getMyLocation();
-                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+                isLocationTrackerEnabled = !isLocationTrackerEnabled;
             }
-        });*/
+        });
 
         Button buttonPointsList = (Button) findViewById(R.id.button5);
         buttonPointsList.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
+
     }
 
     @Override
@@ -86,15 +88,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // location permission from the user. This sample does not include
         // a request for location permission.
         mMap.setMyLocationEnabled(true);
-       // mMap.setOnMyLocationChangeListener(onMyLocationChange);
+        mMap.setOnMyLocationChangeListener(this);
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             public void onMapClick(LatLng point) {
-                if(addingCheckPoints){
+                if (addingCheckPoints) {
                     //Go to Checkpoint Edit Activity
                     Intent i = new Intent(getApplicationContext(), CheckPointEditActivity.class);
-                    i.putExtra("nameLatLon", new String[]{"",String.valueOf(point.latitude),String.valueOf(point.longitude)});
-                    startActivityForResult(i,999);
+                    i.putExtra("nameLatLon", new String[]{"", String.valueOf(point.latitude), String.valueOf(point.longitude)});
+                    startActivityForResult(i, 999);
                 }
             }
         });
@@ -104,31 +106,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==999 && resultCode==RESULT_OK){
+        if (requestCode == 999 && resultCode == RESULT_OK) {
             dataFromEdit = data.getStringArrayExtra("dataFromEdit");
-            if (dataFromEdit[0].equals("delete")){
+            if (dataFromEdit[0].equals("delete")) {
                 //Dont know if it is needed here...
                 //checkPointDataBaseHandler.deleteData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
-            if (dataFromEdit[0].equals("accept")){
+            if (dataFromEdit[0].equals("accept")) {
                 checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
                 Toast.makeText(getApplicationContext(), "Check Point Added", Toast.LENGTH_LONG).show();
             }
         }
-        if(requestCode==999 && resultCode==RESULT_CANCELED){
+        if (requestCode == 999 && resultCode == RESULT_CANCELED) {
             //message that edit was cancelled
             Toast.makeText(getApplicationContext(), "Check Point Addition Cancelled", Toast.LENGTH_LONG).show();
         }
         refreshCheckPointsOnMap();
     }
 
-    private void addMarkerOnLocation(LatLng loc){
+    private void addMarkerOnLocation(LatLng loc) {
         Marker mMarker = mMap.addMarker(new MarkerOptions().position(loc));
     }
 
     private Location getMyLocation() {
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (myLocation == null) {
             Criteria criteria = new Criteria();
@@ -145,7 +157,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
-
+    @Override
+    public void onMyLocationChange(Location location) {
+        if(isLocationTrackerEnabled) {
+            Location newLocation = getMyLocation();
+            LatLng loc = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17.0f));
+        }
+    }
     @Override
     public void onResume(){
         super.onResume();
@@ -170,10 +189,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             addMarkerOnLocation(checkPointPos);
         }
     }
-
-
-
-
 
 
 }
