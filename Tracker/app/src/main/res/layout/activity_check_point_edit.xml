@@ -25,6 +25,13 @@
         android:layout_weight="1"
         android:hint="Alarm (not implemented)" />
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="86dp"
+        android:id="@+id/colorListView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="2.19" />
+
     <Button
         android:id="@+id/button5"
         android:layout_width="match_parent"

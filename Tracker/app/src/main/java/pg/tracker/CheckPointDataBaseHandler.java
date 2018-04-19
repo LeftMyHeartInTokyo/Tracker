@@ -23,23 +23,25 @@ public class CheckPointDataBaseHandler {
 
     }
 
-    public void writeData(String name, Double lat, Double lon) {
+    public void writeData(String name, Double lat, Double lon, String color) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_NAME, name);
         values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_LAT, lat);
         values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_LON, lon);
+        values.put(CheckPointEntry.FeedEntry.COLUMN_NAME_COLOR, color);
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(CheckPointEntry.FeedEntry.TABLE_NAME, null, values);
     }
 
-    public void deleteData(String name, Double lat, Double lon){
+    public void deleteData(String name, Double lat, Double lon, String color){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         db.delete(CheckPointEntry.FeedEntry.TABLE_NAME,
                 CheckPointEntry.FeedEntry.COLUMN_NAME_NAME+"='"+name+"'"+" AND "+
                 CheckPointEntry.FeedEntry.COLUMN_NAME_LAT+"='"+lat+"'"+" AND "+
-                CheckPointEntry.FeedEntry.COLUMN_NAME_LON+"='"+lon+"'", null);
+                CheckPointEntry.FeedEntry.COLUMN_NAME_LON+"='"+lon+"'"+" AND "+
+                CheckPointEntry.FeedEntry.COLUMN_NAME_COLOR+"='"+color, null);
 
     }
 
@@ -61,7 +63,8 @@ public class CheckPointDataBaseHandler {
                 String data="";
                 data += cursor.getString(1) + ", ";//lat
                 data += cursor.getDouble(2) + ", ";//lon
-                data += cursor.getDouble(3);
+                data += cursor.getDouble(3) + ", ";
+                data += cursor.getString(4);
                 allItem.add(data);
 
             }while(cursor.moveToNext());

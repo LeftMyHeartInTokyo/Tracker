@@ -110,11 +110,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             dataFromEdit = data.getStringArrayExtra("dataFromEdit");
             if (dataFromEdit[0].equals("delete")) {
                 //Dont know if it is needed here...
-                //checkPointDataBaseHandler.deleteData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
+                //checkPointDataBaseHandler.deleteData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
+                // dataFromEdit[5]);
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
             if (dataFromEdit[0].equals("accept")) {
-                checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
+                checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
+                        dataFromEdit[5]);
                 Toast.makeText(getApplicationContext(), "Check Point Added", Toast.LENGTH_LONG).show();
             }
         }
@@ -131,16 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Location getMyLocation() {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return null;
-        }
+
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (myLocation == null) {
             Criteria criteria = new Criteria();

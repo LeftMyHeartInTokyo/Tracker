@@ -19,7 +19,8 @@ public class CheckPointHelper extends SQLiteOpenHelper {
                     CheckPointEntry.FeedEntry._ID + " INTEGER PRIMARY KEY," +
                     CheckPointEntry.FeedEntry.COLUMN_NAME_NAME + " TEXT," +
                     CheckPointEntry.FeedEntry.COLUMN_NAME_LAT + " REAL," +
-                    CheckPointEntry.FeedEntry.COLUMN_NAME_LON + " REAL)";
+                    CheckPointEntry.FeedEntry.COLUMN_NAME_LON + " REAL," +
+                    CheckPointEntry.FeedEntry.COLUMN_NAME_COLOR + " TEXT)";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + CheckPointEntry.FeedEntry.TABLE_NAME;

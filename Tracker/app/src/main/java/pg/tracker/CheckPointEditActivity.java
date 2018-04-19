@@ -4,13 +4,21 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CheckPointEditActivity extends AppCompatActivity {
 
     private EditText editTextName, editTextAlarm;
     private String nameLatLonValues[];
+    private ListView colorListView;
+    private String color = "Czerwony";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,21 @@ public class CheckPointEditActivity extends AppCompatActivity {
                 onDelPressed();
             }
         });
+        colorListView = (ListView) findViewById(R.id.colorListView);
+        final String colors[] = {"Czerwony", "Zielony", "Niebieski", "Czarny"};
+        ArrayList<String> colorsList = new ArrayList<String>();
+        colorsList.addAll(Arrays.asList(colors));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row, colorsList);
+
+        colorListView.setAdapter(adapter);
+
+        colorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                color = colorListView.getItemAtPosition(i).toString();
+            }
+        });
     }
 
     @Override
@@ -50,7 +73,8 @@ public class CheckPointEditActivity extends AppCompatActivity {
                 editTextName.getText().toString(),
                 nameLatLonValues[1],
                 nameLatLonValues[2],
-                editTextAlarm.getText().toString()
+                editTextAlarm.getText().toString(),
+                color
         };
         i.putExtra("dataFromEdit", editData);
         setResult(RESULT_OK,i);
@@ -64,7 +88,8 @@ public class CheckPointEditActivity extends AppCompatActivity {
                 editTextName.getText().toString(),
                 nameLatLonValues[1],
                 nameLatLonValues[2],
-                editTextAlarm.getText().toString()
+                editTextAlarm.getText().toString(),
+                color
         };
         i.putExtra("dataFromEdit", editData);
         setResult(RESULT_OK,i);

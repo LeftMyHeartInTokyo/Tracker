@@ -17,6 +17,7 @@ public final class CheckPointEntry {
         public static final String COLUMN_NAME_NAME = "name";
         public static final String  COLUMN_NAME_LAT = "lat";
         public static final String  COLUMN_NAME_LON = "lon";
+        public static final String  COLUMN_NAME_COLOR = "color";
     }
 }
 
