@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "532051973285",
+    "firebase_url": "https://tracker-1522432494230.firebaseio.com",
+    "project_id": "tracker-1522432494230",
+    "storage_bucket": "tracker-1522432494230.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532051973285:android:087b1ccb62a02120",
+        "android_client_info": {
+          "package_name": "pg.tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "532051973285-qs74p23re8feudlvl4563g6db2gv721b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMkNMEPL8qb2_n-pscl0e0aUgrZGX3tLE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
