@@ -88,25 +88,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
-        /*final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        final Context ctx = this;
-        mAuth.createUserWithEmailAndPassword("tikari2@gmail.com", "Haslo11111")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                           Toast.makeText(ctx, "nope", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // ...
-                    }
-                });*/
-        DatabaseReference  Database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference("users");
-        mMessageReference.child("test2").setValue("test4");
     }
 
     @Override
@@ -205,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Location newLocation = getMyLocation();
             LatLng loc = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17.0f));
+            DatabaseReference  Database = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference("users");
+            mMessageReference.child("test").child("position").setValue(loc);
         }
     }
     @Override
