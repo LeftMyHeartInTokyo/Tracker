@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="12"
+    android:orientation="vertical"
+    tools:context=".AccountsActivity">
+
+    <Button
+        android:id="@+id/buttonAllAccounts"
+        android:layout_weight="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List of all accounts"
+        android:textSize="10sp"/>
+
+    <Button
+        android:id="@+id/buttonTrackedAccounts"
+        android:layout_weight="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List of connected accounts"
+        android:textSize="10sp"/>
+
+    <Button
+        android:id="@+id/buttonRegisterNew"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Register new account"
+        android:textSize="10sp"/>
+
+    <Button
+        android:id="@+id/buttonLogIn"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log in"
+        android:textSize="10sp"/>
+
+    <Button
+        android:id="@+id/buttonLogOut"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log out"
+        android:textSize="10sp"/>
+
+    <Button
+        android:id="@+id/buttonChangePassword"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Password"
+        android:textSize="10sp"/>
+
+</LinearLayout>

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String[] dataFromEdit;
     CheckPointDataBaseHandler checkPointDataBaseHandler;
     private boolean isLocationTrackerEnabled = false;
+    private FirebaseUser currentUser;
 
 
     @Override
@@ -52,8 +53,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if(currentUser == null) {
+            startActivity(new Intent(this, RegisterActivity.class));
             startActivity(new Intent(this, LoginActivity.class));
         }
 
@@ -67,10 +69,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         clickButtonPunKon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addingCheckPoints = !addingCheckPoints;
-                if (addingCheckPoints)
-                    findViewById(R.id.button1).getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
-                else findViewById(R.id.button1).getBackground().clearColorFilter();
+                if(currentUser != null){
+                    addingCheckPoints = !addingCheckPoints;
+                    if (addingCheckPoints)
+                        findViewById(R.id.button1).getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
+                    else findViewById(R.id.button1).getBackground().clearColorFilter();
+                } else {
+                    Toast.makeText(getApplicationContext(), "You must be logged in to add Checkpoints", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+        Button buttonAccounts = (Button) findViewById(R.id.button2);
+        buttonAccounts.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), AccountsActivity.class));
             }
         });
 

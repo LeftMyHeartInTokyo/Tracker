@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="PUN KO"
+            android:text="PUN KON"
             android:textSize="10sp"/>
 
         <Button
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="BLISCY"
+            android:text="KONTA "
             android:textSize="10sp"/>
         <Button
             android:id="@+id/button3"

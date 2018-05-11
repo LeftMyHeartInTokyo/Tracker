@@ -43,7 +43,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".AccountsActivity" />
+        <activity android:name=".AccountsListActivity" />
+        <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".AccountsConnectionsListActivity"></activity>
     </application>
 
 </manifest>
