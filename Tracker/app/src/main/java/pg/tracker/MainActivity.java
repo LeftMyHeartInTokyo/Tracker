@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentUser = mAuth.getCurrentUser();
         if(currentUser == null) {
             startActivity(new Intent(this, RegisterActivity.class));
-            startActivity(new Intent(this, LoginActivity.class));
+            //startActivity(new Intent(this, LoginActivity.class));
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -202,7 +202,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17.0f));
             DatabaseReference  Database = FirebaseDatabase.getInstance().getReference();
             DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference("users");
-            mMessageReference.child("test").child("position").setValue(loc);
+            String name = currentUser.getEmail();
+            mMessageReference.child(name.replace(".","_")).child("position").setValue(loc);
         }
     }
     @Override
