@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void writeUserToDB(String email) {
-        UserEntity user = new UserEntity(email);
+        UserEntity user = new UserEntity(email, 0.0, 0.0);
 
         mDatabase.child("users").child(email.replaceAll("\\.", "_")).setValue(user);
     }

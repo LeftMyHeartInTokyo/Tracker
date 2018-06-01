@@ -4,6 +4,7 @@ import android.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Criteria;
 import android.location.Location;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,8 +34,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -133,6 +138,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         refreshCheckPointsOnMap();
     }
 
+
+    private void showOthersLocations() {
+        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+        usersReference.addValueEventListener(connectionsListener);
+    }
+
+    ValueEventListener connectionsListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            ArrayList<UserEntity> users = new ArrayList<>();
+            for (DataSnapshot ds : dataSnapshot.getChildren()){
+                UserEntity user = ds.getValue(UserEntity.class);
+                mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(user.position.latitude, user.position.longitude))
+                        .radius(10000)
+                        .strokeColor(Color.RED)
+                        .fillColor(Color.BLUE));
+                users.add(user);
+
+            }
+            int size = users.size();
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 999 && resultCode == RESULT_OK) {
@@ -229,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             addMarkerOnLocation(checkPointPos, data[3]);
         }
+        showOthersLocations();
     }
 
 

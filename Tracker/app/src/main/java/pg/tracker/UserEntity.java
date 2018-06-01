@@ -6,7 +6,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class UserEntity {
 
     public String user;
-
+    public PositionEntity position;
     public UserEntity() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
@@ -19,8 +19,9 @@ public class UserEntity {
         this.user = user;
     }
 
-    public UserEntity(String user) {
+    public UserEntity(String user, Double latitude, Double longitude) {
         this.user = user;
+        this.position = new PositionEntity(latitude,longitude);
     }
 
 }
