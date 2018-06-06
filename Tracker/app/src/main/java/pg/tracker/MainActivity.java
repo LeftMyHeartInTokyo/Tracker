@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationChangeListener {
 
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     CheckPointDataBaseHandler checkPointDataBaseHandler;
     private boolean isLocationTrackerEnabled = false;
     private FirebaseUser currentUser;
-
+    private List<ConnectionEntity> connections = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentUser = mAuth.getCurrentUser();
         if(currentUser == null) {
             startActivity(new Intent(this, RegisterActivity.class));
-            //startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }
+        DatabaseReference conRef = FirebaseDatabase.getInstance().getReference("connections");
+        conRef.addValueEventListener(connectionsListener);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -140,26 +144,57 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void showOthersLocations() {
-        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
-        usersReference.addValueEventListener(connectionsListener);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+                usersReference.addValueEventListener(usersListener);
+            }
+        }, 1000);
+
     }
+
+    private boolean areConnected(String first, String second) {
+        for( ConnectionEntity c : connections) {;
+            if ((c.getFirstEmail().equals(first) || c.getSecondEmail().equals(first)) &&
+                    (c.getFirstEmail().equals(second) || c.getSecondEmail().equals(second))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    ValueEventListener usersListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            String myName = currentUser.getEmail();
+            for (DataSnapshot ds : dataSnapshot.getChildren()){
+                UserEntity user = ds.getValue(UserEntity.class);
+                if (!user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
+                    mMap.addCircle(new CircleOptions()
+                            .center(new LatLng(user.position.latitude, user.position.longitude))
+                            .radius(10)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.BLUE));
+                }
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };
+
 
     ValueEventListener connectionsListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            ArrayList<UserEntity> users = new ArrayList<>();
+            String name = currentUser.getEmail();
             for (DataSnapshot ds : dataSnapshot.getChildren()){
-                UserEntity user = ds.getValue(UserEntity.class);
-                mMap.addCircle(new CircleOptions()
-                        .center(new LatLng(user.position.latitude, user.position.longitude))
-                        .radius(10000)
-                        .strokeColor(Color.RED)
-                        .fillColor(Color.BLUE));
-                users.add(user);
-
+                ConnectionEntity con = ds.getValue(ConnectionEntity.class);
+                String test = ds.getKey();
+                connections.add(con);
             }
-            int size = users.size();
-
         }
 
         @Override
