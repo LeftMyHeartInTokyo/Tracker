@@ -104,6 +104,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        Button alarmButton = (Button) findViewById(R.id.alarmButton);
+        alarmButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                sendAlarm();
+            }
+        });
+
         Button buttonPointsList = (Button) findViewById(R.id.button5);
         buttonPointsList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -111,6 +118,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         checkPointDataBaseHandler = new CheckPointDataBaseHandler(this);
+        DatabaseReference alarmReference = FirebaseDatabase.getInstance().getReference("alarm");
+        ValueEventListener alarmListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                AlarmEntity alarm = dataSnapshot.getValue(AlarmEntity.class);
+                Toast.makeText(getApplicationContext(), alarm.alarm, Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        alarmReference.addValueEventListener(alarmListener);
     }
 
     @Override
@@ -305,5 +324,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         showOthersLocations();
     }
 
-
+    private void sendAlarm() {
+        if(currentUser != null) {
+            DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("alarm");
+            AlarmEntity alarm = new AlarmEntity(currentUser.getEmail() + " wzywa pomocy");
+            usersReference.setValue(alarm);
+        }
+    }
 }
