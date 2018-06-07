@@ -167,15 +167,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ValueEventListener usersListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            String myName = currentUser.getEmail();
-            for (DataSnapshot ds : dataSnapshot.getChildren()){
-                UserEntity user = ds.getValue(UserEntity.class);
-                if (!user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
-                    mMap.addCircle(new CircleOptions()
-                            .center(new LatLng(user.position.latitude, user.position.longitude))
-                            .radius(10)
-                            .strokeColor(Color.RED)
-                            .fillColor(Color.BLUE));
+            if(currentUser != null){
+                String myName = currentUser.getEmail();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    UserEntity user = ds.getValue(UserEntity.class);
+                    if (!user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
+                        mMap.addCircle(new CircleOptions()
+                                .center(new LatLng(user.position.latitude, user.position.longitude))
+                                .radius(10)
+                                .strokeColor(Color.RED)
+                                .fillColor(Color.BLUE));
+                    }
                 }
             }
         }
@@ -189,11 +191,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ValueEventListener connectionsListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            String name = currentUser.getEmail();
-            for (DataSnapshot ds : dataSnapshot.getChildren()){
-                ConnectionEntity con = ds.getValue(ConnectionEntity.class);
-                String test = ds.getKey();
-                connections.add(con);
+            if(currentUser != null){
+                String name = currentUser.getEmail();
+                for (DataSnapshot ds : dataSnapshot.getChildren()){
+                    ConnectionEntity con = ds.getValue(ConnectionEntity.class);
+                    String test = ds.getKey();
+                    connections.add(con);
+                }
             }
         }
 
@@ -265,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     @Override
     public void onMyLocationChange(Location location) {
-        if(isLocationTrackerEnabled) {
+        if(isLocationTrackerEnabled && currentUser != null) {
             Location newLocation = getMyLocation();
             LatLng loc = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 17.0f));
