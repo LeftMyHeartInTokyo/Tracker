@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private boolean areConnected(String first, String second) {
-        for( ConnectionEntity c : connections) {;
+        for( ConnectionEntity c : connections) {
             if ((c.getFirstEmail().equals(first) || c.getSecondEmail().equals(first)) &&
                     (c.getFirstEmail().equals(second) || c.getSecondEmail().equals(second))) {
                 return true;
@@ -195,16 +195,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         public void onDataChange(DataSnapshot dataSnapshot) {
             if(currentUser != null){
                 connectedUsers.clear();
+                checkPointDataBaseHandler.deleteAllData();
                 String myName = currentUser.getEmail();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     UserEntity user = ds.getValue(UserEntity.class);
                     if (!user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
                         connectedUsers.add(user);
+                        refreshCheckPointsOnMap();
                         mMap.addCircle(new CircleOptions()
                                 .center(new LatLng(user.position.latitude, user.position.longitude))
                                 .radius(100)
                                 .strokeColor(Color.RED)
                                 .fillColor(Color.BLUE));
+                    }
+
+                    if (user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
+
+                        if(user.checkpoints == null) continue;
+                        for (CheckPointEntity ckEntity : user.checkpoints) {
+                            checkPointDataBaseHandler.writeData(
+                                    ckEntity.name,
+                                    ckEntity.position.latitude,
+                                    ckEntity.position.longitude,
+                                    ckEntity.alarm);
+                        }
                     }
                 }
             }
@@ -245,8 +259,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
             if (dataFromEdit[0].equals("accept")) {
-                checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
-                        dataFromEdit[5]);
+                LatLng loc = new LatLng( Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+                String name = currentUser.getEmail();
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).child("position").setValue(loc);
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).child("color").setValue(dataFromEdit[5]);
+                //TODO DODAĆ ALARM !!
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).child("alarm").setValue(" ");
+                //
                 Toast.makeText(getApplicationContext(), "Check Point Added", Toast.LENGTH_LONG).show();
             }
         }
