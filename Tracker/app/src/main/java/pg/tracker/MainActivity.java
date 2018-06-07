@@ -43,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationChangeListener {
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isLocationTrackerEnabled = false;
     private FirebaseUser currentUser;
     private List<ConnectionEntity> connections = new ArrayList<>();
+    private boolean firstCheckingOfAlarm = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +124,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ValueEventListener alarmListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                AlarmEntity alarm = dataSnapshot.getValue(AlarmEntity.class);
-                Toast.makeText(getApplicationContext(), alarm.alarm, Toast.LENGTH_LONG).show();
+                if(!firstCheckingOfAlarm) {
+                    AlarmEntity alarm = dataSnapshot.getValue(AlarmEntity.class);
+                    Toast.makeText(getApplicationContext(), alarm.alarm, Toast.LENGTH_LONG).show();
+                }
+                firstCheckingOfAlarm = false;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -326,8 +331,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void sendAlarm() {
         if(currentUser != null) {
+            Random generator = new Random();
             DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("alarm");
-            AlarmEntity alarm = new AlarmEntity(currentUser.getEmail() + " wzywa pomocy");
+            AlarmEntity alarm = new AlarmEntity(currentUser.getEmail() + " wzywa pomocy",generator.nextInt());
             usersReference.setValue(alarm);
         }
     }

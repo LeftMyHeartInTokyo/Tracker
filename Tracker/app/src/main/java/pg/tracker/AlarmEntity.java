@@ -9,6 +9,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class AlarmEntity {
 
     public String alarm;
+    public int id;
     public AlarmEntity() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
@@ -17,12 +18,14 @@ public class AlarmEntity {
         return alarm;
     }
 
-    public void setAlarm(String alarm) {
+    public void setAlarm(String alarm, int id) {
         this.alarm = alarm;
+        this.id = id;
     }
 
-    public AlarmEntity(String alarm) {
+    public AlarmEntity(String alarm, int id) {
         this.alarm = alarm;
+        this.id = id;
     }
 
 }
