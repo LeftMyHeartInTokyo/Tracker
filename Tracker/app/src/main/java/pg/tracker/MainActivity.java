@@ -200,11 +200,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     UserEntity user = ds.getValue(UserEntity.class);
                     if (!user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
                         connectedUsers.add(user);
-                        mMap.addCircle(new CircleOptions()
-                                .center(new LatLng(user.position.latitude, user.position.longitude))
-                                .radius(100)
-                                .strokeColor(Color.RED)
-                                .fillColor(Color.BLUE));
+                        mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(user.position.latitude, user.position.longitude))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                                .title(user.user));
+                        ;
                     }
                 }
             }
