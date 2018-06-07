@@ -10,6 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FirebaseUser currentUser;
     private List<ConnectionEntity> connections = new ArrayList<>();
     private boolean firstCheckingOfAlarm = true;
+    private List<UserEntity> connectedUsers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,13 +194,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             if(currentUser != null){
+                connectedUsers.clear();
                 String myName = currentUser.getEmail();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     UserEntity user = ds.getValue(UserEntity.class);
                     if (!user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
+                        connectedUsers.add(user);
                         mMap.addCircle(new CircleOptions()
                                 .center(new LatLng(user.position.latitude, user.position.longitude))
-                                .radius(10)
+                                .radius(100)
                                 .strokeColor(Color.RED)
                                 .fillColor(Color.BLUE));
                     }
@@ -301,6 +305,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             DatabaseReference mMessageReference = FirebaseDatabase.getInstance().getReference("users");
             String name = currentUser.getEmail();
             mMessageReference.child(name.replace(".","_")).child("position").setValue(loc);
+            for(UserEntity user : connectedUsers) {
+                if(Math.abs(user.position.longitude - loc.longitude) < 0.1 &&
+                        Math.abs(user.position.latitude - loc.latitude) < 0.1) {
+                    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(500);
+                }
+            }
         }
     }
     @Override
