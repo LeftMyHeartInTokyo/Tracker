@@ -59,7 +59,8 @@ public class AccountsConnectionsListActivity extends AppCompatActivity {
             ArrayList<String> connections = new ArrayList<>();
             for (DataSnapshot ds : dataSnapshot.getChildren()){
                 ConnectionEntity connection = ds.getValue(ConnectionEntity.class);
-                connections.add(connection.getFirstEmail() + " " + connection.getSecondEmail());
+                if(connection.getFirstEmail().equals(currentUser.getEmail()) || connection.getSecondEmail().equals(currentUser.getEmail()))
+                    connections.add(connection.getFirstEmail() + " " + connection.getSecondEmail());
             }
             refreshListContent(connections);
         }

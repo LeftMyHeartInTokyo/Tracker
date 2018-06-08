@@ -10,6 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class AllCheckPointsActivity extends AppCompatActivity {
 
     private CheckPointDataBaseHandler checkPointDataBaseHandler;
@@ -42,9 +48,18 @@ public class AllCheckPointsActivity extends AppCompatActivity {
         if(requestCode==998 && resultCode==RESULT_OK){
             String[] dataFromEdit;
             dataFromEdit = data.getStringArrayExtra("dataFromEdit");
+
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            String name = currentUser.getEmail();
+
             if (dataFromEdit[0].equals("delete")){
                 checkPointDataBaseHandler.deleteData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
                         dataFromEdit[5]);
+
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).removeValue();
+
                 Toast.makeText(getApplicationContext(), "Check Point Deleted", Toast.LENGTH_LONG).show();
             }
             if (dataFromEdit[0].equals("accept")){
@@ -52,6 +67,15 @@ public class AllCheckPointsActivity extends AppCompatActivity {
                         dataFromEdit[5]);
                 checkPointDataBaseHandler.writeData(dataFromEdit[1], Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]),
                         dataFromEdit[5]);
+
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).removeValue();
+
+                LatLng loc = new LatLng( Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
+                CheckPointEntity checkPointEntity = new CheckPointEntity(dataFromEdit[1], dataFromEdit[5], dataFromEdit[4],
+                        Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]), name.replace(".","_"));
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).setValue(checkPointEntity);
+
+
                 Toast.makeText(getApplicationContext(), "Check Point Edited", Toast.LENGTH_LONG).show();
             }
         }

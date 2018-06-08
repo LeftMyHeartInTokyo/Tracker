@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 isLocationTrackerEnabled = !isLocationTrackerEnabled;
+                if (isLocationTrackerEnabled)
+                    findViewById(R.id.button3).getBackground().setColorFilter(0xFF00FF00, PorterDuff.Mode.MULTIPLY);
+                else findViewById(R.id.button3).getBackground().clearColorFilter();
             }
         });
 
@@ -183,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private boolean areConnected(String first, String second) {
         for( ConnectionEntity c : connections) {
-            if ((c.getFirstEmail().equals(first) || c.getSecondEmail().equals(first)) &&
-                    (c.getFirstEmail().equals(second) || c.getSecondEmail().equals(second))) {
+            if ((c.getFirstEmail().equals(first) && c.getSecondEmail().equals(second)) ||
+                    (c.getFirstEmail().equals(second) && c.getSecondEmail().equals(first))) {
                 return true;
             }
         }
@@ -205,18 +208,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .position(new LatLng(user.position.latitude, user.position.longitude))
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                                 .title(user.user));
-                        ;
                     }
-
-                    if (user.getUser().equals(myName) && areConnected(user.getUser(), myName)) {
-
-                        if(user.checkpoints == null) continue;
-                        for (CheckPointEntity ckEntity : user.checkpoints) {
+                    for (DataSnapshot subds : ds.child("checkpoints").getChildren()){
+                        CheckPointEntity checkPointEntity = subds.getValue(CheckPointEntity.class);
+                        if (checkPointEntity.user.equals(myName.replace(".","_")) || areConnected(checkPointEntity.user.replace("_","."), myName)) {
                             checkPointDataBaseHandler.writeData(
-                                    ckEntity.name,
-                                    ckEntity.position.latitude,
-                                    ckEntity.position.longitude,
-                                    ckEntity.alarm);
+                                    checkPointEntity.name,
+                                    checkPointEntity.position.latitude,
+                                    checkPointEntity.position.longitude,
+                                    checkPointEntity.color);
                         }
                     }
                 }
@@ -261,12 +261,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng loc = new LatLng( Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]));
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
                 String name = currentUser.getEmail();
-                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).child("position").setValue(loc);
-                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).child("color").setValue(dataFromEdit[5]);
-                //TODO DODAĆ ALARM !!
-                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).child("alarm").setValue(" ");
-                //
+
+                CheckPointEntity checkPointEntity = new CheckPointEntity(dataFromEdit[1], dataFromEdit[5], dataFromEdit[4],
+                        Double.parseDouble(dataFromEdit[2]), Double.parseDouble(dataFromEdit[3]), name.replace(".","_"));
+
+                databaseReference.child(name.replace(".","_")).child("checkpoints").child(dataFromEdit[1]).setValue(checkPointEntity);
                 Toast.makeText(getApplicationContext(), "Check Point Added", Toast.LENGTH_LONG).show();
+                refreshCheckPointsOnMap();
             }
         }
         if (requestCode == 999 && resultCode == RESULT_CANCELED) {

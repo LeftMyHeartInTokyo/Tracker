@@ -2,14 +2,14 @@ package pg.tracker;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class UserEntity {
 
     public String user;
     public PositionEntity position;
-    public ArrayList<CheckPointEntity> checkpoints;
     public UserEntity() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
